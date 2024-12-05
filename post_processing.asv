@@ -1,0 +1,13 @@
+clear;
+close all;
+clc;
+%% Post Processing for tables quantifying iterative Error for Roe-FDS and AUSM in solving Spalart-Allmaras
+% First order Roe-FDS
+roe1 = load('Roe-1-res.dat');
+roe1_data = roe1(:, 2); % extract lift-y values used for convergence
+roe1_norm = norm(roe1_data, 2); % calculate norm 2
+
+% Norm table headings
+headings = {'1st Order Roe-FDS', '1st Order AUSM', '2nd Order '}
+
+
