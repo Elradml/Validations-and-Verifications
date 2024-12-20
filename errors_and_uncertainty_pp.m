@@ -49,7 +49,7 @@ iu1 = []; % holds iterative uncertainties
 
 for i = 2:139
     % estimate eigen values
-    eigen1 = (norm((roe1_data(i+1) - roe1_data(i)), 2)/140) / norm((roe1_data(i) - roe1_data(i-1)),2)/140; 
+    eigen1 = (norm((roe1_data(i+1) - roe1_data(i)), 2)/140) / norm((roe1_data(i) - roe1_data(i-1)), 2)/140; 
     avg1 = [avg1, eigen1];
     % estimate the iterative error
     iter_error1 = (roe1_data(i+1) - roe1_data(i)) / (eigen1 - 1);
@@ -175,77 +175,109 @@ end
 
 %% Plotting graphs for errors & uncertainties against iterations
 % Plots for first order upwind for Roe-FDS and AUSM
+fig1 = figure;
+set(gcf, 'Units', 'pixels', 'Position', [40, 80, 800, 600]);
+tile = tiledlayout(2, 2, 'Padding', 'compact', 'TileSpacing', 'compact');
+a1 = nexttile(1);
+hold on
 x1 = linspace(0, 140, 138);
 x2 = linspace(0, 154, 152);
-y11 = iu1; % values for iterative uncertainty of both numerical methods
-y12 = iu2;
+y11 = abs(iu1); % values for iterative uncertainty of both numerical methods
+y12 = abs(iu2);
 
 plot(x1, y11, x2, y12)
 xlabel('Iterations')
-ylabel('Error (%)')
+ylabel('Uncertainty (%)')
 legend({'Roe-FDS', 'AUSM'}, 'Location', 'best')
 title('Iterative Uncertainty for First Order Upwind')
 grid on
-saveas(gcf, 'RoevAUSMu1.png');
+
+a2 = nexttile(2);
+%%% Plots for second order upwind for both methods
+x3 = linspace(0, 66, 64);
+x4 = linspace(0, 66, 64);
+y21 = abs(iu3); % values for iterative uncertainty of both numerical methods
+y22 = abs(iu4);
+
+plot(x3, y21, x4, y22)
+xlabel('Iterations')
+ylabel('Uncertainty (%)')
+legend({'Roe-FDS', 'AUSM'}, 'Location', 'best')
+title('Iterative Uncertainty for Second Order Upwind')
+grid on
+
+a3 = nexttile(3);
+%%% Plots for third order MUSCL for both methods
+x5 = linspace(0, 66, 64);
+x6 = linspace(0, 66, 64);
+y31 = abs(iu5); % values for iterative uncertainty of both numerical methods
+y32 = abs(iu6);
+
+plot(x5, y31, x6, y32)
+xlabel('Iterations')
+ylabel('Uncertainty (%)')
+legend({'Roe-FDS', 'AUSM'}, 'Location', 'best')
+title('Iterative Uncertainty for Third Order MUSCL')
+grid on
+
+annotation('textbox', [0.12, 0.9, 0.05, 0.05], 'String', '(a)', ...
+           'FontSize', 12, 'EdgeColor', 'none');
+annotation('textbox', [0.62, 0.9, 0.05, 0.05], 'String', '(b)', ...
+           'FontSize', 12, 'EdgeColor', 'none');
+annotation('textbox', [0.12, 0.40, 0.05, 0.05], 'String', '(c)', ...
+           'FontSize', 12, 'EdgeColor', 'none');
+
+set(fig1, 'PaperUnits', 'centimeters');
+set(fig1, 'PaperSize', [21 8]);  
+saveas(fig1,'uncertainties.png')
+
+fig2 = figure;
+set(gcf, 'Units', 'pixels', 'Position', [40, 80, 800, 600]);
+tile = tiledlayout(2, 2, 'Padding', 'compact', 'TileSpacing', 'compact');
+b1 = nexttile(1);
 
 y111 = ie1; % values for iterative error of both numerical methods
 y121 = ie2;
-
 plot(x1, y111, x2, y121)
 xlabel('Iterations')
 ylabel('Error (%)')
 legend({'Roe-FDS', 'AUSM'}, 'Location', 'best')
 title('Iterative Errors for First Order Upwind')
 grid on
-saveas(gcf, 'RoevAUSMe1.png')
 
-%%% Plots for second order upwind for both methods
-x3 = linspace(0, 66, 64);
-x4 = linspace(0, 66, 64);
-y21 = iu3; % values for iterative uncertainty of both numerical methods
-y22 = iu4;
-
-plot(x3, y21, x4, y22)
-xlabel('Iterations')
-ylabel('Error (%)')
-legend({'Roe-FDS', 'AUSM'}, 'Location', 'best')
-title('Iterative Uncertainty for Second Order Upwind')
-grid on
-saveas(gcf, 'RoevAUSMu2.png');
-
+b2 = nexttile(2);
 y211 = ie3; % values for iterative error of both numerical methods
 y221 = ie4;
-
 plot(x3, y211, x4, y221)
 xlabel('Iterations')
 ylabel('Error (%)')
 legend({'Roe-FDS', 'AUSM'}, 'Location', 'best')
 title('Iterative Errors for Second Order Upwind')
 grid on
-saveas(gcf, 'RoevAUSMe2.png')
 
 
-%%% Plots for third order MUSCL for both methods
-x5 = linspace(0, 66, 64);
-x6 = linspace(0, 66, 64);
-y31 = iu5; % values for iterative uncertainty of both numerical methods
-y32 = iu6;
-
-plot(x5, y31, x6, y32)
-xlabel('Iterations')
-ylabel('Error (%)')
-legend({'Roe-FDS', 'AUSM'}, 'Location', 'best')
-title('Iterative Uncertainty for Third Order MUSCL')
-grid on
-saveas(gcf, 'RoevAUSMu3.png');
-
+b3 = nexttile(3);
 y311 = ie5; % values for iterative error of both numerical methods
 y321 = ie6;
-
 plot(x5, y311, x6, y321)
 xlabel('Iterations')
 ylabel('Error (%)')
 legend({'Roe-FDS', 'AUSM'}, 'Location', 'best')
 title('Iterative Errors for Third Order MUSCL')
 grid on
-saveas(gcf, 'RoevAUSMe3.png')
+
+annotation('textbox', [0.12, 0.9, 0.05, 0.05], 'String', '(a)', ...
+           'FontSize', 12, 'EdgeColor', 'none');
+annotation('textbox', [0.62, 0.9, 0.05, 0.05], 'String', '(b)', ...
+           'FontSize', 12, 'EdgeColor', 'none');
+annotation('textbox', [0.15, 0.40, 0.05, 0.05], 'String', '(c)', ...
+           'FontSize', 12, 'EdgeColor', 'none');
+
+set(fig2, 'PaperUnits', 'centimeters');
+set(fig2, 'PaperSize', [21 8]);  
+saveas(fig2,'errors.png')
+
+%% Checking which scheme gives the lowest iterative uncertainty
+check = [abs(iu1(end)), abs(iu2(end)), abs(iu3(end)), abs(iu4(end)), abs(iu5(end)), abs(iu6(end))];
+disp(check);
+disp(min(check));
